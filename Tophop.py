@@ -1,6 +1,7 @@
 import tkinter as tk
 import PIL.Image as Image
 import PIL.ImageTk as ImageTk
+import random as rand
 
 root = tk.Tk()
 root.attributes('-fullscreen', True)
@@ -15,11 +16,35 @@ renderHandL = ImageTk.PhotoImage(loadHand.rotate(-90))
 
 canvas=tk.Canvas(root, width=1000, height=1200)
 canvas.pack()
+
+def drawCard(x, y, hand, left):
+    if hand==1:
+        if left==1:
+            card = renderHandL
+        else:
+            card = renderHandR
+    else:
+        if left==1:
+            card = renderFootL
+        else:
+            card = renderFootR
+    canvas.create_image(x,y,image=card)
+
 for i in range (0,5):
-    image=canvas.create_image(100+i*200, 100, image=renderFootL)
-    image=canvas.create_image(100+i*200, 300, image=renderFootR)
-    image=canvas.create_image(100+i*200, 500, image=renderHandR)
-    image=canvas.create_image(100+i*200, 700, image=renderHandL)
+    a=rand.randint(0,1)
+    b=rand.randint(0,2)
+    c=rand.randint(0,1)
+
+    drawCard(100+i*200,100+b*200,a,c)
+    d=0
+    for j in range (0,3):
+        if j!=b:
+            drawCard(100 + i * 200, 100 + j * 200, 1-a, 1-d)
+            d=d+1
+#    image=canvas.create_image(100+i*200, 100, image=renderFootL)
+#    image=canvas.create_image(100+i*200, 300, image=renderFootR)
+#    image=canvas.create_image(100+i*200, 500, image=renderHandR)
+#    image=canvas.create_image(100+i*200, 700, image=renderHandL)
 
 
 root.mainloop()
