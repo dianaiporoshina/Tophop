@@ -3,6 +3,9 @@ import PIL.Image as Image
 import PIL.ImageTk as ImageTk
 import random as rand
 
+w = root.winfo_screenwidth() 
+h = root.winfo_screenheight()
+
 root = tk.Tk()
 root.attributes('-fullscreen', True)
 root.bind('<Escape>',lambda e: root.destroy())
@@ -14,7 +17,7 @@ loadHand = Image.open("resource\\hand.png")
 renderHandR = ImageTk.PhotoImage(loadHand.transpose(Image.FLIP_LEFT_RIGHT).rotate(-90))
 renderHandL = ImageTk.PhotoImage(loadHand.rotate(-90))
 
-canvas=tk.Canvas(root, width=1000, height=1200)
+canvas=tk.Canvas(root, width=w, height=h)
 canvas.pack()
 
 def drawCard(x, y, hand, left):
