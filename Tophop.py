@@ -3,9 +3,6 @@ import PIL.Image as Image
 import PIL.ImageTk as ImageTk
 import random as rand
 
-w = root.winfo_screenwidth() 
-h = root.winfo_screenheight()
-
 root = tk.Tk()
 root.attributes('-fullscreen', True)
 root.bind('<Escape>',lambda e: root.destroy())
@@ -16,6 +13,9 @@ renderFootL = ImageTk.PhotoImage(loadFoot.rotate(-90))
 loadHand = Image.open("resource\\hand.png")
 renderHandR = ImageTk.PhotoImage(loadHand.transpose(Image.FLIP_LEFT_RIGHT).rotate(-90))
 renderHandL = ImageTk.PhotoImage(loadHand.rotate(-90))
+
+w = root.winfo_screenwidth() 
+h = root.winfo_screenheight()
 
 canvas=tk.Canvas(root, width=w, height=h)
 canvas.pack()
