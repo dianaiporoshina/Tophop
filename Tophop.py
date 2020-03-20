@@ -32,18 +32,19 @@ def drawCard(x, y, hand, left):
         else:
             card = renderFootR
     canvas.create_image(x,y,image=card)
+for q in range(0,5)
+    for i in range (0,5):
+        a=rand.randint(0,1)
+        b=rand.randint(0,2)
+        c=rand.randint(0,1)
 
-for i in range (0,5):
-    a=rand.randint(0,1)
-    b=rand.randint(0,2)
-    c=rand.randint(0,1)
-
-    drawCard(100+i*200,100+b*200,a,c)
-    d=0
-    for j in range (0,3):
-        if j!=b:
-            drawCard(100 + i * 200, 100 + j * 200, 1-a, 1-d)
-            d=d+1
+       drawCard(100+i*200,100+b*200,a,c)
+       d=0
+       for j in range (0,3):
+            if j!=b:
+                drawCard(100 + i * 200, 100 + j * 200, 1-a, 1-d)
+                d=d+1
+time.sleep(60)
 #    image=canvas.create_image(100+i*200, 100, image=renderFootL)
 #    image=canvas.create_image(100+i*200, 300, image=renderFootR)
 #    image=canvas.create_image(100+i*200, 500, image=renderHandR)
