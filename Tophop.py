@@ -32,7 +32,7 @@ def drawCard(x, y, hand, left):
         else:
             card = renderFootR
     canvas.create_image(x,y,image=card)
-for q in range(0,5)
+for q in range(0,5):/
     for i in range (0,5):
         a=rand.randint(0,1)
         b=rand.randint(0,2)
