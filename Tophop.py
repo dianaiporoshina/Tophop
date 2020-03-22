@@ -16,11 +16,15 @@ renderHandL = ImageTk.PhotoImage(loadHand.rotate(-90))
 
 w = root.winfo_screenwidth() 
 h = root.winfo_screenheight()
+gapH = 15
+gapW = 10
+numRow = w//(200+gapW)
+
 
 canvas=tk.Canvas(root, width=w, height=h)
 canvas.pack()
 
-def drawCard(x, y, hand, left):
+def drawCard(x, y, hand, left, line):
     if hand==1:
         if left==1:
             card = renderHandL
@@ -31,24 +35,27 @@ def drawCard(x, y, hand, left):
             card = renderFootL
         else:
             card = renderFootR
-    canvas.create_image(x,y,image=card)
-for q in range(0,5):
-    for i in range (0,5):
-        a=rand.randint(0,1)
-        b=rand.randint(0,2)
-        c=rand.randint(0,1)
+    canvas.create_image(x, y, image = card, tag = "line"+str(line))
 
-       drawCard(100+i*200,100+b*200,a,c)
-       d=0
-       for j in range (0,3):
-            if j!=b:
-                drawCard(100 + i * 200, 100 + j * 200, 1-a, 1-d)
-                d=d+1
-time.sleep(60)
-#    image=canvas.create_image(100+i*200, 100, image=renderFootL)
-#    image=canvas.create_image(100+i*200, 300, image=renderFootR)
-#    image=canvas.create_image(100+i*200, 500, image=renderHandR)
-#    image=canvas.create_image(100+i*200, 700, image=renderHandL)
+def updateGapH(delta):
+    top = canvas.find_withtag("line0")
+    for card in top:
+        canvas.move(card, 0, delta)
+    bottom = canvas.find_withtag("line2")
+    for card in bottom:
+        canvas.move(card, 0, -delta)
 
+for i in range (0,numRow):
+    a=rand.randint(0,1)
+    b=rand.randint(0,2)
+    c=rand.randint(0,1)
+    drawCard(100+i*(200+gapW),h//2+(b-1)*(200+gapH),a,c,b)
+    d=0
+    for j in range (0,3):
+        if j!=b:
+            drawCard(100 + i * (200+gapW),h//2+(j-1)*(200+gapH), 1-a, 1-d,j)
+            d=d+1
 
+root.bind('<q>',lambda e: updateGapH(-1))
+root.bind('<a>',lambda e: updateGapH(1))
 root.mainloop()
