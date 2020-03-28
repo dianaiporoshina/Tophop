@@ -24,7 +24,7 @@ numRow = w//(200+gapW)
 canvas=tk.Canvas(root, width=w, height=h)
 canvas.pack()
 
-def drawCard(x, y, hand, left, line):
+def drawCard(x, y, hand, left, line, row):
     if hand==1:
         if left==1:
             card = renderHandL
@@ -35,7 +35,8 @@ def drawCard(x, y, hand, left, line):
             card = renderFootL
         else:
             card = renderFootR
-    canvas.create_image(x, y, image = card, tag = "line"+str(line))
+    canvas.create_image(x, y, image = card, tag = "line"+str(line)+" row"+str(row))
+    #print("line"+str(line)+" row"+str(row))
 
 def updateGapH(delta):
     top = canvas.find_withtag("line0")
@@ -45,17 +46,26 @@ def updateGapH(delta):
     for card in bottom:
         canvas.move(card, 0, -delta)
 
+def updateGapW(delta):
+    for i in range(0,numRow):
+        curRow = canvas.find_withtag("row"+str(i))
+        for card in curRow:
+            canvas.move(card, delta*i, 0)
+
 for i in range (0,numRow):
     a=rand.randint(0,1)
     b=rand.randint(0,2)
     c=rand.randint(0,1)
-    drawCard(100+i*(200+gapW),h//2+(b-1)*(200+gapH),a,c,b)
+    drawCard(100+i*(200+gapW),h//2+(b-1)*(200+gapH),a,c,b,i)
     d=0
     for j in range (0,3):
         if j!=b:
-            drawCard(100 + i * (200+gapW),h//2+(j-1)*(200+gapH), 1-a, 1-d,j)
+            drawCard(100 + i * (200+gapW),h//2+(j-1)*(200+gapH), 1-a, 1-d,j,i)
             d=d+1
 
 root.bind('<q>',lambda e: updateGapH(-1))
 root.bind('<a>',lambda e: updateGapH(1))
+root.bind('<w>',lambda e: updateGapW(-1))
+root.bind('<s>',lambda e: updateGapW(1))
+
 root.mainloop()
