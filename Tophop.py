@@ -19,14 +19,14 @@ loadHandL = loadHand.rotate(-90)
 w = root.winfo_screenwidth() 
 h = root.winfo_screenheight()
 gapH = 15
-gapW = 10
+gapW = 5
 cardH = 200
-cardW = 100
-multRow = 1.1
-numRow = int(math.log((multRow-1)*w/(cardW+gapW)+1,multRow))-1
+cardW = 40
+multRow = 1.5
+numRow = int(math.log((multRow-1)*w/(cardW+gapW)+1,multRow))
 
-realW = int((multRow-1)*w/(multRow**(numRow+2)-1))
-cardW = realW-gapW
+realW = int((multRow-1)*w/(multRow**(numRow)-1))
+gapW = realW-cardW
 
 cardsArray = []
 
@@ -44,6 +44,7 @@ def drawCard(x, y, hand, left, line, row, curCardW):
             card = loadFootL
         else:
             card = loadFootR
+    print(curCardW)
     renderCard = ImageTk.PhotoImage(card.resize((curCardW,cardH)))
     cardsArray.append(renderCard)
     canvas.create_image(x, y, image = renderCard, tag = "line"+str(line)+" row"+str(row))
@@ -52,11 +53,11 @@ def drawRow(x, row, curCardW, curGapW):
     a=rand.randint(0,1)
     b=rand.randint(0,2)
     c=rand.randint(0,1)
-    drawCard(curCardW//2+row*(curCardW+curGapW),h//2+(b-1)*(cardH+gapH),a,c,b,row,curCardW)
+    drawCard(curCardW//2+x,h//2+(b-1)*(cardH+gapH),a,c,b,row,curCardW)
     d=0
     for j in range (0,3):
         if j!=b:
-            drawCard(curCardW//2 + row * (curCardW+curGapW),h//2+(j-1)*(cardH+gapH), 1-a, 1-d,j,row,curCardW)
+            drawCard(curCardW//2 + x,h//2+(j-1)*(cardH+gapH), 1-a, 1-d,j,row,curCardW)
             d=d+1
 
 def drawField():
@@ -64,6 +65,7 @@ def drawField():
     curGapW = gapW
     curX = 0
     for i in range(0, numRow):
+        print(curX, curCardW,curGapW)
         drawRow(curX,i,curCardW,curGapW)
         curX = curX+curGapW+curCardW
         curGapW = int(curGapW*multRow)
