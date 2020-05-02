@@ -23,6 +23,7 @@ gapW = 5
 cardH = 200
 cardW = 40
 multRow = 1.5
+
 numRow = int(math.log((multRow-1)*w/(cardW+gapW)+1,multRow))
 
 realW = int((multRow-1)*w/(multRow**(numRow)-1))
