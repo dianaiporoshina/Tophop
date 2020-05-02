@@ -2,41 +2,72 @@ import tkinter as tk
 import PIL.Image as Image
 import PIL.ImageTk as ImageTk
 import random as rand
+import math as math
 
 root = tk.Tk()
 root.attributes('-fullscreen', True)
 root.bind('<Escape>',lambda e: root.destroy())
 
 loadFoot = Image.open("resource\\foot.png")
-renderFootR = ImageTk.PhotoImage(loadFoot.transpose(Image.FLIP_LEFT_RIGHT).rotate(-90))
-renderFootL = ImageTk.PhotoImage(loadFoot.rotate(-90))
+loadFootR = loadFoot.transpose(Image.FLIP_LEFT_RIGHT).rotate(-90)
+loadFootL = loadFoot.rotate(-90)
 loadHand = Image.open("resource\\hand.png")
-renderHandR = ImageTk.PhotoImage(loadHand.transpose(Image.FLIP_LEFT_RIGHT).rotate(-90))
-renderHandL = ImageTk.PhotoImage(loadHand.rotate(-90))
+loadHandR = loadHand.transpose(Image.FLIP_LEFT_RIGHT).rotate(-90)
+loadHandL = loadHand.rotate(-90)
+
 
 w = root.winfo_screenwidth() 
 h = root.winfo_screenheight()
 gapH = 15
 gapW = 10
-numRow = w//(200+gapW)
+cardH = 200
+cardW = 100
+multRow = 1.1
+numRow = int(math.log((multRow-1)*w/(cardW+gapW)+1,multRow))-1
 
+realW = int((multRow-1)*w/(multRow**(numRow+2)-1))
+cardW = realW-gapW
+
+cardsArray = []
 
 canvas=tk.Canvas(root, width=w, height=h)
 canvas.pack()
 
-def drawCard(x, y, hand, left, line, row):
+def drawCard(x, y, hand, left, line, row, curCardW):
     if hand==1:
         if left==1:
-            card = renderHandL
+            card = loadHandL
         else:
-            card = renderHandR
+            card = loadHandR
     else:
         if left==1:
-            card = renderFootL
+            card = loadFootL
         else:
-            card = renderFootR
-    canvas.create_image(x, y, image = card, tag = "line"+str(line)+" row"+str(row))
-    #print("line"+str(line)+" row"+str(row))
+            card = loadFootR
+    renderCard = ImageTk.PhotoImage(card.resize((curCardW,cardH)))
+    cardsArray.append(renderCard)
+    canvas.create_image(x, y, image = renderCard, tag = "line"+str(line)+" row"+str(row))
+
+def drawRow(x, row, curCardW, curGapW):
+    a=rand.randint(0,1)
+    b=rand.randint(0,2)
+    c=rand.randint(0,1)
+    drawCard(curCardW//2+row*(curCardW+curGapW),h//2+(b-1)*(cardH+gapH),a,c,b,row,curCardW)
+    d=0
+    for j in range (0,3):
+        if j!=b:
+            drawCard(curCardW//2 + row * (curCardW+curGapW),h//2+(j-1)*(cardH+gapH), 1-a, 1-d,j,row,curCardW)
+            d=d+1
+
+def drawField():
+    curCardW = cardW
+    curGapW = gapW
+    curX = 0
+    for i in range(0, numRow):
+        drawRow(curX,i,curCardW,curGapW)
+        curX = curX+curGapW+curCardW
+        curGapW = int(curGapW*multRow)
+        curCardW = int(curCardW*multRow)
 
 def updateGapH(delta):
     top = canvas.find_withtag("line0")
@@ -52,16 +83,7 @@ def updateGapW(delta):
         for card in curRow:
             canvas.move(card, delta*i, 0)
 
-for i in range (0,numRow):
-    a=rand.randint(0,1)
-    b=rand.randint(0,2)
-    c=rand.randint(0,1)
-    drawCard(100+i*(200+gapW),h//2+(b-1)*(200+gapH),a,c,b,i)
-    d=0
-    for j in range (0,3):
-        if j!=b:
-            drawCard(100 + i * (200+gapW),h//2+(j-1)*(200+gapH), 1-a, 1-d,j,i)
-            d=d+1
+drawField()
 
 root.bind('<q>',lambda e: updateGapH(-1))
 root.bind('<a>',lambda e: updateGapH(1))
