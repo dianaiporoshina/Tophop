@@ -1,6 +1,7 @@
 import tkinter as tk
 import PIL.Image as Image
 import PIL.ImageTk as ImageTk
+import PIL
 import random as rand
 import math as math
 
@@ -19,15 +20,17 @@ loadHandL = loadHand.rotate(-90)
 w = root.winfo_screenwidth() 
 h = root.winfo_screenheight()
 gapH = 15
-gapW = 5
+gapW = 8
 cardH = 200
-cardW = 40
-multRow = 1.5
+cardW = 50
+multRow = 1.4
 
 numRow = int(math.log((multRow-1)*w/(cardW+gapW)+1,multRow))
 
-realW = int((multRow-1)*w/(multRow**(numRow)-1))
-gapW = realW-cardW
+realW = (multRow-1)*w/(multRow**(numRow)-1)
+k = realW/(cardW+gapW)
+gapW = int(gapW*k)
+cardW = int(cardW*k)
 
 cardsArray = []
 
@@ -45,8 +48,7 @@ def drawCard(x, y, hand, left, line, row, curCardW):
             card = loadFootL
         else:
             card = loadFootR
-    print(curCardW)
-    renderCard = ImageTk.PhotoImage(card.resize((curCardW,cardH)))
+    renderCard = ImageTk.PhotoImage(card.resize((curCardW,cardH),PIL.Image.LANCZOS))
     cardsArray.append(renderCard)
     canvas.create_image(x, y, image = renderCard, tag = "line"+str(line)+" row"+str(row))
 
@@ -66,7 +68,6 @@ def drawField():
     curGapW = gapW
     curX = 0
     for i in range(0, numRow):
-        print(curX, curCardW,curGapW)
         drawRow(curX,i,curCardW,curGapW)
         curX = curX+curGapW+curCardW
         curGapW = int(curGapW*multRow)
